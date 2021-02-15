@@ -1,0 +1,70 @@
+﻿<Window x:Class="TempleScheduler.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TempleScheduler"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="300"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBox Name="tb" Text="Please Select a Path Before Saving or Merging" Margin="220,13,0,0" Grid.Row="3" Height="21" Width="340" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment ="Center">
+
+            <ListBox Name="monday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <ListBox.ItemTemplate>
+                    <DataTemplate >
+                        <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <ListBox Name="tuesday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown">
+                <ListBox.ItemTemplate>
+                    <DataTemplate >
+                        <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ListBox Name="wednesday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown">
+                <ListBox.ItemTemplate>
+                    <DataTemplate >
+                        <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ListBox Name="jueves" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown">
+                <ListBox.ItemTemplate>
+                    <DataTemplate >
+                        <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ListBox Name="friday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown">
+                <ListBox.ItemTemplate>
+                    <DataTemplate >
+                        <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+        </StackPanel>
+
+
+        <Button x:Name="save" Content="Save" HorizontalAlignment="Left" Margin="669,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="91" Height="29" Click="SaveSchedule_Event"/>
+        <Button x:Name="path" Content="Path" HorizontalAlignment="Left" Margin="147,13,0,0" VerticalAlignment="Top" Width="68" Height="21" Click="PathDialog_Event" Grid.Row="3"/>
+        <TextBox x:Name="nameTB" HorizontalAlignment="Left" Height="24" Margin="55,6,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="18,9,0,0" TextWrapping="Wrap" Text="Name" VerticalAlignment="Top"/>
+        <Button x:Name="merge" Content="Merge" HorizontalAlignment="Left" Margin="571,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="87" Height="29"/>
+
+
+    </Grid>
+</Window>
