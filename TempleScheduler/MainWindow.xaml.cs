@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using Brushes = System.Windows.Media.Brushes;
 
 namespace TempleScheduler
 {
