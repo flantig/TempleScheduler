@@ -54,9 +54,7 @@ namespace TempleScheduler
 
         private void BindLife()
         {
-            List<string> time = new List<string> { "8:00 PM", "8:30 PM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM", "5:30 PM", };
-            
-            List<TimeLord> m, t, w, j, f = new List<TimeLord>();
+            List<string> time = new List<string> { "8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM", "5:30 PM", };
 
             List<System.Windows.Controls.ListBox> listBoxes = new List<System.Windows.Controls.ListBox> { monday, tuesday, wednesday, jueves, friday };
             foreach (System.Windows.Controls.ListBox lister in listBoxes)
@@ -110,7 +108,7 @@ namespace TempleScheduler
                         flexHours.Add(item.Time);
                     }
                    
-                    Console.WriteLine(item);
+                   
                 }
                 
                 

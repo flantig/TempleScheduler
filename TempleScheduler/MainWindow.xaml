@@ -27,28 +27,28 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <ListBox Name="tuesday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown">
+            <ListBox Name="tuesday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                 <ListBox.ItemTemplate>
                     <DataTemplate >
                         <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <ListBox Name="wednesday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown">
+            <ListBox Name="wednesday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                 <ListBox.ItemTemplate>
                     <DataTemplate >
                         <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <ListBox Name="jueves" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown">
+            <ListBox Name="jueves" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                 <ListBox.ItemTemplate>
                     <DataTemplate >
                         <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <ListBox Name="friday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown">
+            <ListBox Name="friday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled">
                 <ListBox.ItemTemplate>
                     <DataTemplate >
                         <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
