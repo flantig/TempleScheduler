@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,27 +22,6 @@ using Brushes = System.Windows.Media.Brushes;
 
 namespace TempleScheduler
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    /// 
-    [Serializable]
-    public class Schedule
-    {
-        public string name;
-        public List<List<string>> normalTimes;
-        public List<List<string>> flexTimes;
-        
-    }
-
-    public class TimeLord
-    {
-        public string Flex
-        {get; set;}
-        public string Time
-        { get; set; }
-    }
-
     public partial class MainWindow : Window
     {
         
