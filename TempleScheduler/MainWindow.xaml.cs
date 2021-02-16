@@ -20,6 +20,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Brushes = System.Windows.Media.Brushes;
 using MessageBox = System.Windows.MessageBox;
+using System;
 
 namespace TempleScheduler
 {
@@ -143,6 +144,50 @@ namespace TempleScheduler
             else
             {
                 MessageBox.Show("That's not a valid directory...");
+            }
+        }
+
+        private childItem FindVisualChild<childItem>(DependencyObject obj)
+    where childItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                {
+                    return (childItem)child;
+                }
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
+        }
+
+        private void clear_Click(object sender, RoutedEventArgs e)
+        {
+            List<System.Windows.Controls.ListBox> weekdays = new List<System.Windows.Controls.ListBox> { monday, tuesday, wednesday, jueves, friday };
+
+
+            for (var i = 0; i < weekdays.Count; i++)
+            {
+                foreach (TimeLord item in weekdays[i].Items)
+                {
+                    item.Flex = "off";
+                }
+
+/*                foreach (ListBoxItem box in weekdays[i].ItemsSource)
+                {
+                    ContentPresenter myContentPresenter = FindVisualChild<ContentPresenter>(box);
+                    DataTemplate myDataTemplate = myContentPresenter.ContentTemplate;
+                    TextBlock block = (TextBlock)myDataTemplate.FindName("textBlock", myContentPresenter);
+
+
+                    block.Foreground = Brushes.Black;
+                }*/
             }
         }
     }
