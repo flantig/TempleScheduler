@@ -4,6 +4,18 @@
              xmlns:local="clr-namespace:TempleScheduler"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+                    <Style x:Key="FlexTemplate" TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path =Flex}" Value="normal">
+                                <Setter Property="Foreground" Value="Blue" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path =Flex}" Value="flex">
+                                <Setter Property="Foreground" Value="Red" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+
     </Application.Resources>
 </Application>

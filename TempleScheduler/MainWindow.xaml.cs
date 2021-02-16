@@ -21,12 +21,13 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Brushes = System.Windows.Media.Brushes;
 using MessageBox = System.Windows.MessageBox;
 using System;
+using Control = System.Windows.Controls.Control;
 
 namespace TempleScheduler
 {
     public partial class MainWindow : Window
     {
-        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -35,21 +36,26 @@ namespace TempleScheduler
 
         private void BindLife()
         {
-            List<string> time = new List<string> { "8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM", "5:30 PM", };
+            List<string> time = new List<string>
+            {
+                "8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM",
+                "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM",
+                "5:00 PM", "5:30 PM",
+            };
 
-            List<System.Windows.Controls.ListBox> listBoxes = new List<System.Windows.Controls.ListBox> { monday, tuesday, wednesday, jueves, friday };
+            List<System.Windows.Controls.ListBox> listBoxes = new List<System.Windows.Controls.ListBox>
+                {monday, tuesday, wednesday, jueves, friday};
             foreach (System.Windows.Controls.ListBox lister in listBoxes)
             {
                 List<TimeLord> Bindables = new List<TimeLord>();
 
                 foreach (string item in time)
                 {
-                    Bindables.Add(new TimeLord() { Flex = "off", Time = item });
+                    Bindables.Add(new TimeLord() {Flex = "off", Time = item});
                 }
 
                 lister.ItemsSource = Bindables;
             }
-
         }
 
 
@@ -68,9 +74,10 @@ namespace TempleScheduler
                 return;
             }
 
-            List<System.Windows.Controls.ListBox> weekdays = new List<System.Windows.Controls.ListBox> { monday, tuesday, wednesday, jueves, friday};
+            List<System.Windows.Controls.ListBox> weekdays = new List<System.Windows.Controls.ListBox>
+                {monday, tuesday, wednesday, jueves, friday};
             Schedule schedule = new Schedule();
-            
+
 
             List<string> flexHours;
             List<string> normalHours;
@@ -81,27 +88,24 @@ namespace TempleScheduler
             schedule.flexTimes = new List<List<string>>();
             for (var i = 0; i < weekdays.Count; i++)
             {
-            
                 normalHours = new List<string>();
                 flexHours = new List<string>();
 
                 foreach (TimeLord item in weekdays[i].Items)
                 {
-                    if(item.Flex == "normal")
+                    if (item.Flex == "normal")
                     {
                         normalHours.Add(item.Time);
-                    } else if (item.Flex == "flex")
+                    }
+                    else if (item.Flex == "flex")
                     {
                         flexHours.Add(item.Time);
                     }
-                   
-                   
                 }
-                
-                
+
+
                 schedule.normalTimes.Add(normalHours);
                 schedule.flexTimes.Add(flexHours);
-                
             }
 
             string json = JsonConvert.SerializeObject(schedule);
@@ -112,26 +116,23 @@ namespace TempleScheduler
 
         private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TimeLord item = (TimeLord)(sender as TextBlock).DataContext;
+            TimeLord item = (TimeLord) (sender as TextBlock).DataContext;
             var textBlock = sender as TextBlock;
 
             switch (item.Flex)
             {
                 case "off":
-                    textBlock.Foreground = Brushes.Red;
                     item.Flex = "normal";
                     break;
                 case "normal":
-                    textBlock.Foreground = Brushes.Green;
                     item.Flex = "flex";
                     break;
                 case "flex":
-                    textBlock.Foreground = Brushes.Black;
                     item.Flex = "off";
                     break;
-                
             }
         }
+
 
         private void Merge_OnClick(object sender, RoutedEventArgs e)
         {
@@ -147,30 +148,24 @@ namespace TempleScheduler
             }
         }
 
-        private childItem FindVisualChild<childItem>(DependencyObject obj)
-    where childItem : DependencyObject
+        public List<System.Windows.Controls.Control> AllChildren(DependencyObject parent)
         {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            var _List = new List<System.Windows.Controls.Control> { };
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
             {
-                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is childItem)
-                {
-                    return (childItem)child;
-                }
-                else
-                {
-                    childItem childOfChild = FindVisualChild<childItem>(child);
-                    if (childOfChild != null)
-                        return childOfChild;
-                }
+                var chil = VisualTreeHelper.GetChild(parent, i);
+                if (chil is Control)
+                    _List.Add(chil as Control);
+                _List.AddRange(AllChildren(chil));
             }
-            return null;
+
+            return _List;
         }
 
         private void clear_Click(object sender, RoutedEventArgs e)
         {
-            List<System.Windows.Controls.ListBox> weekdays = new List<System.Windows.Controls.ListBox> { monday, tuesday, wednesday, jueves, friday };
-
+            List<System.Windows.Controls.ListBox> weekdays = new List<System.Windows.Controls.ListBox>
+                {monday, tuesday, wednesday, jueves, friday};
 
             for (var i = 0; i < weekdays.Count; i++)
             {
@@ -178,16 +173,6 @@ namespace TempleScheduler
                 {
                     item.Flex = "off";
                 }
-
-/*                foreach (ListBoxItem box in weekdays[i].ItemsSource)
-                {
-                    ContentPresenter myContentPresenter = FindVisualChild<ContentPresenter>(box);
-                    DataTemplate myDataTemplate = myContentPresenter.ContentTemplate;
-                    TextBlock block = (TextBlock)myDataTemplate.FindName("textBlock", myContentPresenter);
-
-
-                    block.Foreground = Brushes.Black;
-                }*/
             }
         }
     }

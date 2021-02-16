@@ -101,6 +101,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Schedule.cs" />
     <Compile Include="TimeLord.cs" />
     <Page Include="MainWindow.xaml">

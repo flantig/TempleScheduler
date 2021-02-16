@@ -9,62 +9,107 @@
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="35"/>
-            <RowDefinition Height="35"/>
-            <RowDefinition Height="300"/>
-            <RowDefinition/>
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="300" />
+            <RowDefinition />
         </Grid.RowDefinitions>
+        <!--Docstring
 
-        <TextBox Name="tb" Text="Please Select a Path Before Saving or Merging" Margin="220,13,0,0" Grid.Row="3" Height="21" Width="340" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        @TextBox Name: tb and @Button Name: path
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment ="Center">
+            -User can manually enter a path or select one using the dialog by clicking the "Path" button.
+            -If no path is entered or the path directory is invalid, the user will recieve a messagebox telling them that it is invalid
+            -Relevant Events: { PathDialog_Event }
 
-            <ListBox Name="monday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
+        @StackPanel Grid and @ ListBox Names: { monday, tuesday, wednesday, jueves, friday }
+
+            -These are columns of times from 8am to 5:30pm
+            -The user can select each individual time across the weekdays to construct their work schedule
+            -If the user clicks any individual time again it'll change the color of the selection to represent a Flex time interval.
+            -Relevant Events: { TextBlock_MouseDown }
+            -Relevant Static Resources in App.xaml: { FlexTemplate }
+
+        @Button Names: { Clear, Merge, Save } and @TextBox Name: nameTB
+
+            -Clear changes the values of the TimeLord object to activate the DataTrigger in the TextBlock template "FlexTemplate" located in App.xaml so that all entries are cleared
+            -Merge combines all of the .json files in the directory specified by the user, if the directory is invalid it won't merge and throw a message box at the user. It exports an excel file after it's done.
+            -Save exports a .json file in the directory specified by the user with all of the selected values and will throw an error message just like Merge if there is an invalid directory. The filename is determined by what is entered in the TextBox nameTB.
+            -Relevant Events: { PathDialog_Event, SaveSchedule_Event, Merge_OnClick, clear_Click}
+
+        -->
+        <TextBox Name="tb" Text="Please Select a Path Before Saving or Merging" Margin="220,13,0,0" Grid.Row="3"
+                 Height="21" Width="340" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Button x:Name="path" Content="Path" HorizontalAlignment="Left" Margin="147,13,0,0" VerticalAlignment="Top"
+                Width="68" Height="21" Click="PathDialog_Event" Grid.Row="3" />
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+
+            <ListBox Name="monday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
                 <ListBox.ItemTemplate>
-                    <DataTemplate >
-                        <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
+                    <DataTemplate>
+                        <TextBlock Name="dtmBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
+                                   MouseDown="TextBlock_MouseDown" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <ListBox Name="tuesday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
+            <ListBox Name="tuesday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
                 <ListBox.ItemTemplate>
-                    <DataTemplate >
-                        <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
+                    <DataTemplate>
+                        <TextBlock Name="dttBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
+                                   MouseDown="TextBlock_MouseDown" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <ListBox Name="wednesday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
+
+            <ListBox Name="wednesday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
                 <ListBox.ItemTemplate>
-                    <DataTemplate >
-                        <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
+                    <DataTemplate>
+                        <TextBlock Name="dtwBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
+                                   MouseDown="TextBlock_MouseDown" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <ListBox Name="jueves" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
+
+            <ListBox Name="jueves" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
                 <ListBox.ItemTemplate>
-                    <DataTemplate >
-                        <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
+                    <DataTemplate>
+                        <TextBlock Name="dtjBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
+                                   MouseDown="TextBlock_MouseDown" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <ListBox Name="friday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
+
+            <ListBox Name="friday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
                 <ListBox.ItemTemplate>
-                    <DataTemplate >
-                        <TextBlock Text="{Binding Time}" MouseDown="TextBlock_MouseDown"/>
+                    <DataTemplate>
+                        <TextBlock Name="dtfBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
+                                   MouseDown="TextBlock_MouseDown" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+
 
         </StackPanel>
 
 
-        <Button x:Name="save" Content="Save" HorizontalAlignment="Left" Margin="669,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="91" Height="29" Click="SaveSchedule_Event"/>
-        <Button x:Name="path" Content="Path" HorizontalAlignment="Left" Margin="147,13,0,0" VerticalAlignment="Top" Width="68" Height="21" Click="PathDialog_Event" Grid.Row="3"/>
-        <TextBox x:Name="nameTB" HorizontalAlignment="Left" Height="24" Margin="55,6,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="18,9,0,0" TextWrapping="Wrap" Text="Name" VerticalAlignment="Top"/>
-        <Button x:Name="merge" Content="Merge" HorizontalAlignment="Left" Margin="571,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="87" Height="29" Click="Merge_OnClick"/>
-        <Button x:Name="clear" Content="Clear" HorizontalAlignment="Left" Margin="673,3,0,0" VerticalAlignment="Top" Width="87" Height="29" Click="clear_Click"/>
+        <Button x:Name="save" Content="Save" HorizontalAlignment="Left" Margin="669,10,0,0" Grid.Row="3"
+                VerticalAlignment="Top" Width="91" Height="29" Click="SaveSchedule_Event" />
+
+        <TextBox x:Name="nameTB" HorizontalAlignment="Left" Height="24" Margin="55,6,0,0" TextWrapping="Wrap" Text=""
+                 VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="18,9,0,0" TextWrapping="Wrap" Text="Name"
+                   VerticalAlignment="Top" />
+        <Button x:Name="merge" Content="Merge" HorizontalAlignment="Left" Margin="571,10,0,0" Grid.Row="3"
+                VerticalAlignment="Top" Width="87" Height="29" Click="Merge_OnClick" />
+        <Button x:Name="clear" Content="Clear" HorizontalAlignment="Left" Margin="673,3,0,0" VerticalAlignment="Top"
+                Width="87" Height="29" Click="clear_Click" />
 
 
     </Grid>
