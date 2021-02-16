@@ -18,14 +18,18 @@ namespace TempleScheduler
     public class ExcelFormatter
     {
         /**
-         * @param path: Used for the constructor and is expected to be passed by the user when they select a path using the "Path" button
+         * !param path
+         * Used for the constructor and is expected to be passed by the user when they select a path using the "Path" button
          *
-         * @param weekdays: A short list to create new worksheets, the intention is to add an "Overview" tab at a later date.
+         * !param weekdays
+         * A short list to create new worksheets, the intention is to add an "Overview" tab at a later date.
          *
-         * @param time: using EPPlus, I map this onto the excel worksheet using the LoadFromCollection function. This function is very powerful and if I knew about it earlier, I would have abused it like wildfire.
+         * !param time
+         * using EPPlus, I map this onto the excel worksheet using the LoadFromCollection function. This function is very powerful and if I knew about it earlier, I would have abused it like wildfire.
          * For future reference use this for anything whenever you want to map stuff.
          *
-         * @param times: This dictionary is used to manually map a position for the hours selected by the user and represent the row of insertion. These are likely not to change unless the person maintaining wants to change the layout.
+         * !param times
+         * This dictionary is used to manually map a position for the hours selected by the user and represent the row of insertion. These are likely not to change unless the person maintaining wants to change the layout.
          *
          *
          */
@@ -70,7 +74,9 @@ namespace TempleScheduler
         }
 
         /**
-         *@function PersonsJSONDeserializer(): Using the path selected by the user, it'll look through the files available and put together a list of Deserialized jsons into Schedule objects.
+         *!function PersonsJSONDeserializer():
+         * Using the path selected by the user, it'll look through the files available and put together a list of Deserialized jsons into Schedule objects.
+         *
          */
         public async Task<List<Schedule>> PersonsJSONDeserializer()
         {
@@ -92,7 +98,7 @@ namespace TempleScheduler
         }
 
         /**
-         * @function ExcelCreator
+         * !function ExcelCreator():
          *
          */
         public async Task ExcelCreator()
@@ -105,7 +111,7 @@ namespace TempleScheduler
 
             var staff = await PersonsJSONDeserializer();
 
-            /*
+            /**
              * The using keyword allows us to use a file and not worrying about closing it manually later. The old school way of doing this would have been
              * package.Dispose() or in VBA it'd be Workbooks(file).Close
              */
