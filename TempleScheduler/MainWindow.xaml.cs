@@ -138,6 +138,7 @@ namespace TempleScheduler
             {
                 ExcelFormatter export = new ExcelFormatter(tb.Text);
                 export.ExcelCreator();
+                MessageBox.Show("Merge is complete!");
             }
             else
             {

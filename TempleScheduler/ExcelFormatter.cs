@@ -162,8 +162,10 @@ namespace TempleScheduler
                 package.SaveAs(file);
             }
 
-            MessageBox.Show("Merge is complete!");
+
         }
+
+
 
         private void DeleteFileIfExists(FileInfo file)
         {
