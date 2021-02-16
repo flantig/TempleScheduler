@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Brushes = System.Windows.Media.Brushes;
+using MessageBox = System.Windows.MessageBox;
 
 namespace TempleScheduler
 {
@@ -60,6 +61,12 @@ namespace TempleScheduler
 
         private void SaveSchedule_Event(object sender, RoutedEventArgs e)
         {
+            if (!Directory.Exists(tb.Text))
+            {
+                MessageBox.Show("That's not a valid directory...");
+                return;
+            }
+
             List<System.Windows.Controls.ListBox> weekdays = new List<System.Windows.Controls.ListBox> { monday, tuesday, wednesday, jueves, friday};
             Schedule schedule = new Schedule();
             
@@ -98,7 +105,7 @@ namespace TempleScheduler
 
             string json = JsonConvert.SerializeObject(schedule);
             System.IO.File.WriteAllText(tb.Text + $"\\{schedule.name}.json", json);
-
+            MessageBox.Show("Save Complete!!");
         }
 
 
@@ -122,6 +129,19 @@ namespace TempleScheduler
                     item.Flex = "off";
                     break;
                 
+            }
+        }
+
+        private void Merge_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (Directory.Exists(tb.Text))
+            {
+                ExcelFormatter export = new ExcelFormatter(tb.Text);
+                export.ExcelCreator();
+            }
+            else
+            {
+                MessageBox.Show("That's not a valid directory...");
             }
         }
     }

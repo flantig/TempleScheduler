@@ -63,7 +63,7 @@
         <Button x:Name="path" Content="Path" HorizontalAlignment="Left" Margin="147,13,0,0" VerticalAlignment="Top" Width="68" Height="21" Click="PathDialog_Event" Grid.Row="3"/>
         <TextBox x:Name="nameTB" HorizontalAlignment="Left" Height="24" Margin="55,6,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="18,9,0,0" TextWrapping="Wrap" Text="Name" VerticalAlignment="Top"/>
-        <Button x:Name="merge" Content="Merge" HorizontalAlignment="Left" Margin="571,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="87" Height="29"/>
+        <Button x:Name="merge" Content="Merge" HorizontalAlignment="Left" Margin="571,10,0,0" Grid.Row="3" VerticalAlignment="Top" Width="87" Height="29" Click="Merge_OnClick"/>
 
 
     </Grid>
