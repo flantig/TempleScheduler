@@ -8,6 +8,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
 
+
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
             <RowDefinition Height="35" />
@@ -38,6 +39,7 @@
             -Relevant Events: { PathDialog_Event, SaveSchedule_Event, Merge_OnClick, clear_Click}
 
         -->
+
         <TextBox Name="tb" Text="Please Select a Path Before Saving or Merging" Margin="220,13,0,0" Grid.Row="3"
                  Height="21" Width="340" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <Button x:Name="path" Content="Path" HorizontalAlignment="Left" Margin="147,13,0,0" VerticalAlignment="Top"

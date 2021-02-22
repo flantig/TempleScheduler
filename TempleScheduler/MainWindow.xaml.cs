@@ -78,14 +78,18 @@ namespace TempleScheduler
                 {monday, tuesday, wednesday, jueves, friday};
             Schedule schedule = new Schedule();
 
-
+            List<string> range;
             List<string> flexHours;
+            List<List<string>> flexRanges;
+            List<List<string>> normalRanges;
             List<string> normalHours;
 
 
             schedule.name = nameTB.Text;
             schedule.normalTimes = new List<List<string>>();
             schedule.flexTimes = new List<List<string>>();
+            bool recordingNormalRanges = false;
+            bool recordingFlexRanges = false;
             for (var i = 0; i < weekdays.Count; i++)
             {
                 normalHours = new List<string>();
@@ -93,13 +97,46 @@ namespace TempleScheduler
 
                 foreach (TimeLord item in weekdays[i].Items)
                 {
+
+                    flexRanges = new List<List<string>>();
+                    normalRanges = new List<List<string>>();
+                    range = new List<string>();
                     if (item.Flex == "normal")
                     {
+                        if (recordingFlexRanges)
+                        {
+                            flexRanges.Add(range);
+                            range.Clear();
+                        }
+                        recordingFlexRanges = false;
+                        recordingNormalRanges = true;
                         normalHours.Add(item.Time);
                     }
                     else if (item.Flex == "flex")
                     {
+                        if (recordingNormalRanges)
+                        {
+                            normalRanges.Add(range);
+                            range.Clear();
+                        }
+                        recordingFlexRanges = true;
+                        recordingNormalRanges = false;
                         flexHours.Add(item.Time);
+                    }
+                    else
+                    {
+                        if (recordingFlexRanges)
+                        {
+                            flexRanges.Add(range);
+                            range.Clear();
+                        }
+                        if (recordingNormalRanges)
+                        {
+                            normalRanges.Add(range);
+                            range.Clear();
+                        }
+                        recordingFlexRanges = false;
+                        recordingNormalRanges = false;
                     }
                 }
 

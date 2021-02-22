@@ -8,10 +8,10 @@
                     <Style x:Key="FlexTemplate" TargetType="TextBlock">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Path =Flex}" Value="normal">
-                                <Setter Property="Foreground" Value="Blue" />
+                                <Setter Property="Foreground" Value="#0AAB48" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Path =Flex}" Value="flex">
-                                <Setter Property="Foreground" Value="Red" />
+                                <Setter Property="Foreground" Value="#FFBA00" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
