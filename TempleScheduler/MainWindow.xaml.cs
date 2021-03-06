@@ -84,6 +84,9 @@ namespace TempleScheduler
 
 
             schedule.name = nameTB.Text;
+            schedule.phone = phoneTB.Text;
+            schedule.office = officeTB.Text;
+            schedule.semester = semesterTB.Text;
             schedule.normalTimes = new List<List<string>>();
             schedule.flexTimes = new List<List<string>>();
             schedule.normalRanges = new List<IEnumerable<Tuple<int, int>>>();
@@ -175,7 +178,7 @@ namespace TempleScheduler
         {
             if (Directory.Exists(tb.Text))
             {
-                ExcelFormatter export = new ExcelFormatter(tb.Text);
+                ExcelFormatter export = new ExcelFormatter(tb.Text, semesterTB.Text);
                 export.ExcelCreator();
                 MessageBox.Show("Merge is complete!");
             }

@@ -11,6 +11,9 @@ namespace TempleScheduler
     public class Schedule
     {
         public string name;
+        public string phone;
+        public string office;
+        public string semester;
         public List<List<string>> normalTimes;
         public List<List<string>> flexTimes;
         public List<IEnumerable<Tuple<int, int>>> flexRanges;

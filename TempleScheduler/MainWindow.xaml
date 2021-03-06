@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TempleScheduler"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="495" Width="800">
     <Grid>
 
 
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
-            <RowDefinition Height="35" />
-            <RowDefinition Height="300" />
+            <RowDefinition Height="70" />
+            <RowDefinition Height="290" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <!--Docstring
@@ -40,58 +40,58 @@
 
         -->
 
-        <TextBox Name="tb" Text="Please Select a Path Before Saving or Merging" Margin="220,13,0,0" Grid.Row="3"
+        <TextBox Name="tb" Text="Please Select a Path Before Saving or Merging" Margin="249,31,0,0" Grid.Row="3"
                  Height="21" Width="340" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <Button x:Name="path" Content="Path" HorizontalAlignment="Left" Margin="147,13,0,0" VerticalAlignment="Top"
+        <Button x:Name="path" Content="Path" HorizontalAlignment="Left" Margin="176,31,0,0" VerticalAlignment="Top"
                 Width="68" Height="21" Click="PathDialog_Event" Grid.Row="3" />
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="73,0,69,0">
 
-            <ListBox Name="monday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown"
+            <ListBox x:Name="monday" Width="90" Margin="20, 10, 20, 10" MouseDown="TextBlock_MouseDown"
                      ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Name="dtmBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
+                        <TextBlock x:Name="dtmBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
                                    MouseDown="TextBlock_MouseDown" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <ListBox Name="tuesday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown"
+            <ListBox x:Name="tuesday" Width="90" Margin="20, 10, 20, 10" MouseDown="TextBlock_MouseDown"
                      ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Name="dttBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
+                        <TextBlock x:Name="dttBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
                                    MouseDown="TextBlock_MouseDown" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <ListBox Name="wednesday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown"
+            <ListBox x:Name="wednesday" Width="90" Margin="20, 10, 20, 10" MouseDown="TextBlock_MouseDown"
                      ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Name="dtwBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
+                        <TextBlock x:Name="dtwBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
                                    MouseDown="TextBlock_MouseDown" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <ListBox Name="jueves" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown"
+            <ListBox x:Name="jueves" Width="90" Margin="20, 10, 20, 10" MouseDown="TextBlock_MouseDown"
                      ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Name="dtjBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
+                        <TextBlock x:Name="dtjBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
                                    MouseDown="TextBlock_MouseDown" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <ListBox Name="friday" Width="90" Margin="20,0,20,40" MouseDown="TextBlock_MouseDown"
+            <ListBox x:Name="friday" Width="90" Margin="20, 10, 20, 10" MouseDown="TextBlock_MouseDown"
                      ScrollViewer.VerticalScrollBarVisibility="Disabled" IsSynchronizedWithCurrentItem="True">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Name="dtfBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
+                        <TextBlock x:Name="dtfBlock" Style="{StaticResource FlexTemplate}" Text="{Binding Time}"
                                    MouseDown="TextBlock_MouseDown" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -101,17 +101,33 @@
         </StackPanel>
 
 
-        <Button x:Name="save" Content="Save" HorizontalAlignment="Left" Margin="669,10,0,0" Grid.Row="3"
+        <Button x:Name="save" Content="Save" HorizontalAlignment="Left" Margin="691,26,0,0" Grid.Row="3"
                 VerticalAlignment="Top" Width="91" Height="29" Click="SaveSchedule_Event" />
 
         <TextBox x:Name="nameTB" HorizontalAlignment="Left" Height="24" Margin="55,6,0,0" TextWrapping="Wrap" Text=""
                  VerticalAlignment="Top" Width="120" />
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="18,9,0,0" TextWrapping="Wrap" Text="Name"
+        <TextBlock x:Name="nameBlock" HorizontalAlignment="Left" Margin="18,9,0,0" TextWrapping="Wrap" Text="Name"
                    VerticalAlignment="Top" />
-        <Button x:Name="merge" Content="Merge" HorizontalAlignment="Left" Margin="571,10,0,0" Grid.Row="3"
+        <TextBlock x:Name="phoneBlock" HorizontalAlignment="Left" Margin="183,9,0,0" TextWrapping="Wrap" Text="Phone Number"
+            VerticalAlignment="Top" Width="83" />
+        <TextBox x:Name="phoneTB" HorizontalAlignment="Left" Height="24" Margin="271,6,0,0" TextWrapping="Wrap" Text=""
+            VerticalAlignment="Top" Width="120" />
+
+        <Button x:Name="merge" Content="Merge" HorizontalAlignment="Left" Margin="599,26,0,0" Grid.Row="3"
                 VerticalAlignment="Top" Width="87" Height="29" Click="Merge_OnClick" />
         <Button x:Name="clear" Content="Clear" HorizontalAlignment="Left" Margin="673,3,0,0" VerticalAlignment="Top"
                 Width="87" Height="29" Click="clear_Click" />
+        <TextBlock x:Name="officeBlock" HorizontalAlignment="Left" Margin="396,9,0,0" TextWrapping="Wrap" Text="Office Number"
+            VerticalAlignment="Top" Width="83" />
+        <TextBox x:Name="officeTB" HorizontalAlignment="Left" Height="24" Margin="484,6,0,0" TextWrapping="Wrap" Text=""
+            VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="semesterBlock" HorizontalAlignment="Left" Margin="324,0,0,0" TextWrapping="Wrap" Text="Semester Year"
+            VerticalAlignment="Top" Width="155" Grid.Row="1" TextAlignment="Center" FontWeight="Bold" FontSize="20" />
+        <TextBox x:Name="semesterTB" HorizontalAlignment="Left" Height="24" Margin="342,27,0,0" TextWrapping="Wrap" Text=""
+            VerticalAlignment="Top" Width="120" Grid.Row="1" TextAlignment="Center" />
+        <TextBlock x:Name="flexInfo" HorizontalAlignment="Left" Margin="215,49,0,0" TextWrapping="Wrap" Text="Double-click on a time for flex hours"
+            VerticalAlignment="Top" Width="365" Grid.Row="1" TextAlignment="Center" FontStyle="Italic" />
+
 
 
     </Grid>

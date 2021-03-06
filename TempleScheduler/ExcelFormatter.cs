@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using MessageBox = System.Windows.MessageBox;
+using System.Text.RegularExpressions;
 
 namespace TempleScheduler
 {
@@ -35,6 +36,7 @@ namespace TempleScheduler
          *
          */
         public string path;
+        public string semester;
 
         private List<string> weekdays = new List<string> {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 
@@ -69,9 +71,10 @@ namespace TempleScheduler
             {"5:30 PM", 22},
         };
 
-        public ExcelFormatter(string path)
+        public ExcelFormatter(string path, string semester)
         {
             this.path = path;
+            this.semester = semester;
         }
 
         /**
@@ -117,57 +120,91 @@ namespace TempleScheduler
              * The using keyword allows us to use a file and not worrying about closing it manually later. The old school way of doing this would have been
              * package.Dispose() or in VBA it'd be Workbooks(file).Close
              */
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage(newFile: file))
             {
                 var ws = package.Workbook.Worksheets.Add(Name: "Overview");
-
+                ws.Cells[Address: "A1:F1"].Merge = true;
+                ws.Cells[Address: "A1"].Value = "Student Workers " + semester + "Schedule";
+                ws.Cells[Address: "A1"].Style.Font.Bold = true;
+                ws.Cells[Address: "A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                ws.Cells[Address: "A1"].Style.Font.Size = 26;
+                int globalOverviewSpotMax = 0;
                 for (int j = 0; j < 5; j++)
                 {
                     int max = 3;
-                    ws.Cells[1, j + 2].Value = weekdays[j];
-                    int currentOverviewSpot = 2;
+                    ws.Cells[2, j + 2].Value = weekdays[j];
+                    int currentOverviewSpot = 3;
                     for (int k = 0; k < staff.Count; k++)
                     {
                         ws.Cells[currentOverviewSpot, 1].Value = staff[k].name;
+                        ws.Cells[currentOverviewSpot + 1, 1].Value = "Phone: " + Convert.ToInt64(staff[k].phone).ToString("###-###-####");
+                        ws.Cells[currentOverviewSpot + 2, 1].Value = "Office: " + Convert.ToInt64(staff[k].office).ToString("###-###-####");
                         int nRange = 0;
                         int fRange = 0;
-                        for (int i = 0; i < staff[k].normalRanges[j].Count() + staff[k].flexRanges[j].Count(); i++)
+
+                        int flexAndNormalRangeCount = staff[k].normalRanges[j].Count() + staff[k].flexRanges[j].Count();
+                        for (int i = 0; i < flexAndNormalRangeCount; i++)
                         {
-                            if (max < staff[k].normalRanges[j].Count() + staff[k].flexRanges[j].Count())
+                            if (max < flexAndNormalRangeCount)
                             {
-                                max = staff[k].normalRanges[j].Count() + staff[k].flexRanges[j].Count();
+                                max = flexAndNormalRangeCount;
                             }
 
-                            Debug.WriteLine("This is nRange");
-                            Debug.WriteLine(nRange);
-
-                            Debug.WriteLine("This is fRange");
-                            Debug.WriteLine(fRange);
-                            if (staff[k].normalRanges[j].Count() != 0 && staff[k].normalRanges[j].ElementAt(nRange).Item1 < staff[k].flexRanges[j].ElementAt(fRange).Item1)
-                            {
-                                ws.Cells[currentOverviewSpot + i, j + 2].Value =
-                                    time[staff[k].normalRanges[j].ElementAt(nRange).Item1] + "-" +
-                                    time[staff[k].normalRanges[j].ElementAt(nRange).Item2];
-                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor.SetColor(color: System.Drawing.Color.LightGreen);
-                                nRange++;
-                            }
-                            else if (staff[k].flexRanges[j].Count() != 0 && staff[k].flexRanges[j].ElementAt(fRange).Item1 < staff[k].normalRanges[j].ElementAt(nRange).Item1)
+                            if(staff[k].normalRanges[j].Count() == 0 || staff[k].normalRanges[j].Count() == nRange)
                             {
                                 ws.Cells[currentOverviewSpot + i, j + 2].Value =
                                     time[staff[k].flexRanges[j].ElementAt(fRange).Item1] + "-" +
                                     time[staff[k].flexRanges[j].ElementAt(fRange).Item2];
-                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor
-                                    .SetColor(color: System.Drawing.Color.PowderBlue);
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor.SetColor(color: System.Drawing.Color.PowderBlue);
+                                fRange++;
+                            }else if (staff[k].flexRanges[j].Count() == 0 || staff[k].flexRanges[j].Count() == fRange)
+                            {
+                                ws.Cells[currentOverviewSpot + i, j + 2].Value =
+                                    time[staff[k].normalRanges[j].ElementAt(nRange).Item1] + "-" +
+                                    time[staff[k].normalRanges[j].ElementAt(nRange).Item2];
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor.SetColor(color: System.Drawing.Color.LightGreen);
+                                nRange++;
+                            }else if (staff[k].normalRanges[j].ElementAt(nRange).Item1 < staff[k].flexRanges[j].ElementAt(fRange).Item1)
+                            {
+                                ws.Cells[currentOverviewSpot + i, j + 2].Value =
+                                    time[staff[k].normalRanges[j].ElementAt(nRange).Item1] + "-" +
+                                    time[staff[k].normalRanges[j].ElementAt(nRange).Item2];
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor.SetColor(color: System.Drawing.Color.LightGreen);
+                                nRange++;
+                            }
+                            else if (staff[k].flexRanges[j].ElementAt(fRange).Item1 < staff[k].normalRanges[j].ElementAt(nRange).Item1)
+                            {
+                                ws.Cells[currentOverviewSpot + i, j + 2].Value =
+                                    time[staff[k].flexRanges[j].ElementAt(fRange).Item1] + "-" +
+                                    time[staff[k].flexRanges[j].ElementAt(fRange).Item2];
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor.SetColor(color: System.Drawing.Color.PowderBlue);
                                 fRange++;
                             }
 
 
+                           
                         }
-                        currentOverviewSpot += max + 1;
-                    }
 
+
+
+                        currentOverviewSpot += max + 1;
+                        
+                    }
+                    
+                    if(globalOverviewSpotMax < currentOverviewSpot)
+                    {
+                        globalOverviewSpotMax = currentOverviewSpot;
+                    }
                 }
                 ws.Cells.AutoFitColumns();
+                StylingKey(ws: ws, currentCol: 6, shift: 1, globalOverviewSpotMax);
+
+
 
                 for (int j = 0; j < 5; j++)
                 {
@@ -213,11 +250,11 @@ namespace TempleScheduler
 
                             if (currentCol % 2 == 0)
                             {
-                                StylingKey(ws: ws, currentCol: currentCol, shift: 1);
+                                StylingKey(ws: ws, currentCol: currentCol, shift: 1, 24);
                             }
                             else
                             {
-                                StylingKey(ws: ws, currentCol: currentCol, shift: 2);
+                                StylingKey(ws: ws, currentCol: currentCol, shift: 2, 24);
                             }
                         }
                     }
@@ -230,19 +267,19 @@ namespace TempleScheduler
             }
         }
 
-        private static void StylingKey(ExcelWorksheet ws, int currentCol, int shift)
+        private static void StylingKey(ExcelWorksheet ws, int currentCol, int shift, int row)
         {
-            ws.Cells[24, currentCol / 2].Value = "Regular";
-            ws.Cells[24, currentCol / 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells[24, currentCol / 2].Style.Fill.BackgroundColor
+            ws.Cells[row, currentCol / 2].Value = "Regular";
+            ws.Cells[row, currentCol / 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            ws.Cells[row, currentCol / 2].Style.Fill.BackgroundColor
                 .SetColor(System.Drawing.Color.LightGreen);
-            ws.Cells[24, currentCol / 2].Style.Font.Bold = true;
+            ws.Cells[row, currentCol / 2].Style.Font.Bold = true;
 
-            ws.Cells[24, currentCol / 2 + shift].Value = "Flex";
-            ws.Cells[24, currentCol / 2 + shift].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            ws.Cells[24, currentCol / 2 + shift].Style.Fill.BackgroundColor
+            ws.Cells[row, currentCol / 2 + shift].Value = "Flex";
+            ws.Cells[row, currentCol / 2 + shift].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            ws.Cells[row, currentCol / 2 + shift].Style.Fill.BackgroundColor
                 .SetColor(System.Drawing.Color.PowderBlue);
-            ws.Cells[24, currentCol / 2 + shift].Style.Font.Bold = true;
+            ws.Cells[row, currentCol / 2 + shift].Style.Font.Bold = true;
         }
 
 
