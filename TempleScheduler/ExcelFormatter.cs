@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
 using System.Linq;
@@ -99,16 +100,16 @@ namespace TempleScheduler
 
         /**
          * !function ExcelCreator():
-         *<summary>wow this is shit</summary>
+         *<summary>wow this comment markup is awful!</summary>
          * <param name="yourMom"></param>
          */
         public async Task ExcelCreator()
         {
             DateTime today = DateTime.Today;
-            string outputFile = $"{this.path}\\{today.ToString("yyyyMMddfff")}_Schedules.xlsx";
-            Console.WriteLine(outputFile);
-            var file = new FileInfo(outputFile);
-            DeleteFileIfExists(file);
+            string outputFile = $"{this.path}\\{today.ToString(format: "yyyyMMddfff")}_Schedules.xlsx";
+            Console.WriteLine(value: outputFile);
+            var file = new FileInfo(fileName: outputFile);
+            DeleteFileIfExists(file: file);
 
             var staff = await PersonsJSONDeserializer();
 
@@ -116,71 +117,107 @@ namespace TempleScheduler
              * The using keyword allows us to use a file and not worrying about closing it manually later. The old school way of doing this would have been
              * package.Dispose() or in VBA it'd be Workbooks(file).Close
              */
-            using (var package = new ExcelPackage(file))
+            using (var package = new ExcelPackage(newFile: file))
             {
+                var ws = package.Workbook.Worksheets.Add(Name: "Overview");
+
                 for (int j = 0; j < 5; j++)
                 {
-                    var ws = package.Workbook.Worksheets.Add(weekdays[j]);
-                    ws.Cells[3, 1].LoadFromCollection(this.time);
-                    ws.Cells["A1:F1"].Merge = true;
-                    ws.Cells["A1"].Value = weekdays[j];
-                    ws.Cells["A1"].Style.Font.Bold = true;
-                    ws.Cells["A1"].Style.Font.Size = 26;
+                    int max = 3;
+                    ws.Cells[1, j + 2].Value = weekdays[j];
+                    int currentOverviewSpot = 2;
+                    for (int k = 0; k < staff.Count; k++)
+                    {
+                        ws.Cells[currentOverviewSpot, 1].Value = staff[k].name;
+                        int nRange = 0;
+                        int fRange = 0;
+                        for (int i = 0; i < staff[k].normalRanges[j].Count() + staff[k].flexRanges[j].Count(); i++)
+                        {
+                            if (max < staff[k].normalRanges[j].Count() + staff[k].flexRanges[j].Count())
+                            {
+                                max = staff[k].normalRanges[j].Count() + staff[k].flexRanges[j].Count();
+                            }
+
+                            Debug.WriteLine("This is nRange");
+                            Debug.WriteLine(nRange);
+
+                            Debug.WriteLine("This is fRange");
+                            Debug.WriteLine(fRange);
+                            if (staff[k].normalRanges[j].Count() != 0 && staff[k].normalRanges[j].ElementAt(nRange).Item1 < staff[k].flexRanges[j].ElementAt(fRange).Item1)
+                            {
+                                ws.Cells[currentOverviewSpot + i, j + 2].Value =
+                                    time[staff[k].normalRanges[j].ElementAt(nRange).Item1] + "-" +
+                                    time[staff[k].normalRanges[j].ElementAt(nRange).Item2];
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor.SetColor(color: System.Drawing.Color.LightGreen);
+                                nRange++;
+                            }
+                            else if (staff[k].flexRanges[j].Count() != 0 && staff[k].flexRanges[j].ElementAt(fRange).Item1 < staff[k].normalRanges[j].ElementAt(nRange).Item1)
+                            {
+                                ws.Cells[currentOverviewSpot + i, j + 2].Value =
+                                    time[staff[k].flexRanges[j].ElementAt(fRange).Item1] + "-" +
+                                    time[staff[k].flexRanges[j].ElementAt(fRange).Item2];
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor
+                                    .SetColor(color: System.Drawing.Color.PowderBlue);
+                                fRange++;
+                            }
+
+
+                        }
+                        currentOverviewSpot += max + 1;
+                    }
+
+                }
+                ws.Cells.AutoFitColumns();
+
+                for (int j = 0; j < 5; j++)
+                {
+                    ws = package.Workbook.Worksheets.Add(Name: weekdays[index: j]);
+                    ws.Cells[Row: 3, Col: 1].LoadFromCollection(Collection: this.time);
+                    ws.Cells[Address: "A1:F1"].Merge = true;
+                    ws.Cells[Address: "A1"].Value = weekdays[index: j];
+                    ws.Cells[Address: "A1"].Style.Font.Bold = true;
+                    ws.Cells[Address: "A1"].Style.Font.Size = 26;
                     int currentCol = 2;
                     for (int i = 0; i < staff.Count(); i++)
                     {
-                        ws.Cells[2, currentCol].Value = staff[i].name;
-                        ws.Cells[2, currentCol].Style.Font.Bold = true;
-                        foreach (string hour in staff[i].normalTimes[j])
+                        ws.Cells[Row: 2, Col: currentCol].Value = staff[index: i].name;
+                        ws.Cells[Row: 2, Col: currentCol].Style.Font.Bold = true;
+                        foreach (string hour in staff[index: i].normalTimes[index: j])
                         {
-                            ws.Cells[times[hour], currentCol].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                            ws.Cells[times[hour], currentCol].Style.Fill.BackgroundColor
-                                .SetColor(System.Drawing.Color.LightGreen);
+                            ws.Cells[Row: times[key: hour], Col: currentCol].Style.Fill.PatternType =
+                                ExcelFillStyle.Solid;
+                            ws.Cells[Row: times[key: hour], Col: currentCol].Style.Fill.BackgroundColor
+                                .SetColor(color: System.Drawing.Color.LightGreen);
                         }
 
-                        foreach (string hour in staff[i].flexTimes[j])
+                        foreach (string hour in staff[index: i].flexTimes[index: j])
                         {
-                            ws.Cells[times[hour], currentCol].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                            ws.Cells[times[hour], currentCol].Style.Fill.BackgroundColor
-                                .SetColor(System.Drawing.Color.PowderBlue);
+                            ws.Cells[Row: times[key: hour], Col: currentCol].Style.Fill.PatternType =
+                                ExcelFillStyle.Solid;
+                            ws.Cells[Row: times[key: hour], Col: currentCol].Style.Fill.BackgroundColor
+                                .SetColor(color: System.Drawing.Color.PowderBlue);
                         }
 
                         currentCol = currentCol + 1;
                         if (i == staff.Count - 1)
                         {
-                            ws.Cells[3, currentCol].LoadFromCollection(this.time);
-                            ws.Cells[2, 1, 22, currentCol].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                            ws.Cells[2, 1, 22, currentCol].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                            ws.Cells[2, 1, 22, currentCol].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                            ws.Cells[2, 1, 22, currentCol].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                            ws.Cells[Row: 3, Col: currentCol].LoadFromCollection(Collection: this.time);
+                            ws.Cells[FromRow: 2, FromCol: 1, ToRow: 22, ToCol: currentCol].Style.Border.Top.Style =
+                                ExcelBorderStyle.Thin;
+                            ws.Cells[FromRow: 2, FromCol: 1, ToRow: 22, ToCol: currentCol].Style.Border.Left.Style =
+                                ExcelBorderStyle.Thin;
+                            ws.Cells[FromRow: 2, FromCol: 1, ToRow: 22, ToCol: currentCol].Style.Border.Right.Style =
+                                ExcelBorderStyle.Thin;
+                            ws.Cells[FromRow: 2, FromCol: 1, ToRow: 22, ToCol: currentCol].Style.Border.Bottom.Style =
+                                ExcelBorderStyle.Thin;
 
                             if (currentCol % 2 == 0)
                             {
-                                ws.Cells[24, currentCol / 2].Value = "Regular";
-                                ws.Cells[24, currentCol / 2].Style.Font.Bold = true;
-                                ws.Cells[24, currentCol / 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                ws.Cells[24, currentCol / 2].Style.Fill.BackgroundColor
-                                    .SetColor(System.Drawing.Color.LightGreen);
-
-                                ws.Cells[24, currentCol / 2 + 1].Style.Font.Bold = true;
-                                ws.Cells[24, currentCol / 2 + 1].Value = "Flex";
-                                ws.Cells[24, currentCol / 2 + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                ws.Cells[24, currentCol / 2 + 1].Style.Fill.BackgroundColor
-                                    .SetColor(System.Drawing.Color.PowderBlue);
+                                StylingKey(ws: ws, currentCol: currentCol, shift: 1);
                             }
                             else
                             {
-                                ws.Cells[24, currentCol / 2].Value = "Regular";
-                                ws.Cells[24, currentCol / 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                ws.Cells[24, currentCol / 2].Style.Fill.BackgroundColor
-                                    .SetColor(System.Drawing.Color.LightGreen);
-                                ws.Cells[24, currentCol / 2].Style.Font.Bold = true;
-
-                                ws.Cells[24, currentCol / 2 + 2].Value = "Flex";
-                                ws.Cells[24, currentCol / 2 + 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                ws.Cells[24, currentCol / 2 + 2].Style.Fill.BackgroundColor
-                                    .SetColor(System.Drawing.Color.PowderBlue);
-                                ws.Cells[24, currentCol / 2 + 2].Style.Font.Bold = true;
+                                StylingKey(ws: ws, currentCol: currentCol, shift: 2);
                             }
                         }
                     }
@@ -189,8 +226,23 @@ namespace TempleScheduler
                     ws.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 }
 
-                package.SaveAs(file);
+                await package.SaveAsAsync(file: file);
             }
+        }
+
+        private static void StylingKey(ExcelWorksheet ws, int currentCol, int shift)
+        {
+            ws.Cells[24, currentCol / 2].Value = "Regular";
+            ws.Cells[24, currentCol / 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            ws.Cells[24, currentCol / 2].Style.Fill.BackgroundColor
+                .SetColor(System.Drawing.Color.LightGreen);
+            ws.Cells[24, currentCol / 2].Style.Font.Bold = true;
+
+            ws.Cells[24, currentCol / 2 + shift].Value = "Flex";
+            ws.Cells[24, currentCol / 2 + shift].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            ws.Cells[24, currentCol / 2 + shift].Style.Fill.BackgroundColor
+                .SetColor(System.Drawing.Color.PowderBlue);
+            ws.Cells[24, currentCol / 2 + shift].Style.Font.Bold = true;
         }
 
 

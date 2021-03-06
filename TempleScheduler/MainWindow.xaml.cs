@@ -27,7 +27,6 @@ namespace TempleScheduler
 {
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             InitializeComponent();
@@ -78,69 +77,45 @@ namespace TempleScheduler
                 {monday, tuesday, wednesday, jueves, friday};
             Schedule schedule = new Schedule();
 
-            List<string> range;
+
             List<string> flexHours;
-            List<List<string>> flexRanges;
-            List<List<string>> normalRanges;
+
             List<string> normalHours;
 
 
             schedule.name = nameTB.Text;
             schedule.normalTimes = new List<List<string>>();
             schedule.flexTimes = new List<List<string>>();
-            bool recordingNormalRanges = false;
-            bool recordingFlexRanges = false;
+            schedule.normalRanges = new List<IEnumerable<Tuple<int, int>>>();
+            schedule.flexRanges = new List<IEnumerable<Tuple<int, int>>>();
+
             for (var i = 0; i < weekdays.Count; i++)
             {
                 normalHours = new List<string>();
+                var normalIndex = new List<int>();
                 flexHours = new List<string>();
+                var flexIndex = new List<int>();
 
+                int index = 0;
                 foreach (TimeLord item in weekdays[i].Items)
                 {
-
-                    flexRanges = new List<List<string>>();
-                    normalRanges = new List<List<string>>();
-                    range = new List<string>();
                     if (item.Flex == "normal")
                     {
-                        if (recordingFlexRanges)
-                        {
-                            flexRanges.Add(range);
-                            range.Clear();
-                        }
-                        recordingFlexRanges = false;
-                        recordingNormalRanges = true;
+                        normalIndex.Add(index);
                         normalHours.Add(item.Time);
                     }
                     else if (item.Flex == "flex")
                     {
-                        if (recordingNormalRanges)
-                        {
-                            normalRanges.Add(range);
-                            range.Clear();
-                        }
-                        recordingFlexRanges = true;
-                        recordingNormalRanges = false;
+                        flexIndex.Add(index);
                         flexHours.Add(item.Time);
                     }
-                    else
-                    {
-                        if (recordingFlexRanges)
-                        {
-                            flexRanges.Add(range);
-                            range.Clear();
-                        }
-                        if (recordingNormalRanges)
-                        {
-                            normalRanges.Add(range);
-                            range.Clear();
-                        }
-                        recordingFlexRanges = false;
-                        recordingNormalRanges = false;
-                    }
+
+                    index++;
                 }
 
 
+                schedule.normalRanges.Add(numListToPossiblyDegenerateRanges(normalIndex));
+                schedule.flexRanges.Add(numListToPossiblyDegenerateRanges(flexIndex));
                 schedule.normalTimes.Add(normalHours);
                 schedule.flexTimes.Add(flexHours);
             }
@@ -150,6 +125,31 @@ namespace TempleScheduler
             MessageBox.Show("Save Complete!!");
         }
 
+        public static IEnumerable<Tuple<int, int>> numListToPossiblyDegenerateRanges(IEnumerable<int> numList)
+        {
+            Tuple<int, int> currentRange = null;
+            foreach (var num in numList)
+            {
+                if (currentRange == null)
+                {
+                    currentRange = Tuple.Create(num, num);
+                }
+                else if (currentRange.Item2 == num - 1)
+                {
+                    currentRange = Tuple.Create(currentRange.Item1, num);
+                }
+                else
+                {
+                    yield return currentRange;
+                    currentRange = Tuple.Create(num, num);
+                }
+            }
+
+            if (currentRange != null)
+            {
+                yield return currentRange;
+            }
+        }
 
         private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {

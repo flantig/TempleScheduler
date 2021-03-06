@@ -13,6 +13,8 @@ namespace TempleScheduler
         public string name;
         public List<List<string>> normalTimes;
         public List<List<string>> flexTimes;
-        
+        public List<IEnumerable<Tuple<int, int>>> flexRanges;
+        public List<IEnumerable<Tuple<int, int>>> normalRanges;
+
     }
 }
