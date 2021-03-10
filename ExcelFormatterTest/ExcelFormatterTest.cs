@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using TempleScheduler;
 using System;
+using System.Threading.Tasks;
 
 namespace ExcelFormatterTest
 {
@@ -12,10 +13,17 @@ namespace ExcelFormatterTest
         }
 
         [Test]
-        public void Test1()
+        public void TestingJSONDeserializer()
         {
-            ExcelFormatter test = new ExcelFormatter("C:\\Users\\Home\\Desktop");
-            test.FileNames();
+            ExcelFormatter test = new ExcelFormatter(@"C:\Users\Home\Desktop", "");
+            test.PersonsJSONDeserializer();
+        }
+
+        [Test]
+        public async Task TestingExcelCreator()
+        {
+            ExcelFormatter test = new ExcelFormatter(@"C:\Users\Home\Desktop", "");
+            await test.ExcelCreator();
         }
     }
 }
