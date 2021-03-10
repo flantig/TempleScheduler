@@ -15,14 +15,14 @@ namespace ExcelFormatterTest
         [Test]
         public void TestingJSONDeserializer()
         {
-            ExcelFormatter test = new ExcelFormatter(@"C:\Users\Home\Desktop");
+            ExcelFormatter test = new ExcelFormatter(@"C:\Users\Home\Desktop", "");
             test.PersonsJSONDeserializer();
         }
 
         [Test]
         public async Task TestingExcelCreator()
         {
-            ExcelFormatter test = new ExcelFormatter(@"C:\Users\Home\Desktop");
+            ExcelFormatter test = new ExcelFormatter(@"C:\Users\Home\Desktop", "");
             await test.ExcelCreator();
         }
     }

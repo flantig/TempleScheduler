@@ -124,7 +124,7 @@ namespace TempleScheduler
             }
 
             string json = JsonConvert.SerializeObject(schedule);
-            System.IO.File.WriteAllText(tb.Text + $"\\{schedule.name}.json", json);
+            System.IO.File.WriteAllText(tb.Text + $"\\{schedule.name}_Schedules.json", json);
             MessageBox.Show("Save Complete!!");
         }
 

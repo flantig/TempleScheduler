@@ -36,6 +36,7 @@ namespace TempleScheduler
          *
          */
         public string path;
+
         public string semester;
 
         private List<string> weekdays = new List<string> {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
@@ -90,7 +91,7 @@ namespace TempleScheduler
 
             foreach (string staff in fileEntries)
             {
-                if (staff.Contains(".json"))
+                if (staff.Contains("_Schedules.json"))
                 {
                     string json = System.IO.File.ReadAllText(staff);
                     person = JsonConvert.DeserializeObject<Schedule>(json);
@@ -130,16 +131,39 @@ namespace TempleScheduler
                 ws.Cells[Address: "A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 ws.Cells[Address: "A1"].Style.Font.Size = 26;
                 int globalOverviewSpotMax = 0;
-                for (int j = 0; j < 5; j++)
+                int max = 3;
+                int currentOverviewSpot = 3;
+                for (int k = 0; k < staff.Count; k++)
                 {
-                    int max = 3;
-                    ws.Cells[2, j + 2].Value = weekdays[j];
-                    int currentOverviewSpot = 3;
-                    for (int k = 0; k < staff.Count; k++)
+                    ws.Cells[currentOverviewSpot, 1].Value = staff[k].name;
+                    if (staff[k].phone != "")
                     {
-                        ws.Cells[currentOverviewSpot, 1].Value = staff[k].name;
-                        ws.Cells[currentOverviewSpot + 1, 1].Value = "Phone: " + Convert.ToInt64(staff[k].phone).ToString("###-###-####");
-                        ws.Cells[currentOverviewSpot + 2, 1].Value = "Office: " + Convert.ToInt64(staff[k].office).ToString("###-###-####");
+                        ws.Cells[currentOverviewSpot + 1, 1].Value =
+                            "Phone: " + Convert.ToInt64(staff[k].phone).ToString("###-###-####");
+                    }
+                    else
+                    {
+                        ws.Cells[currentOverviewSpot + 1, 1].Value =
+                            "Phone: N/A";
+                    }
+
+                    if (staff[k].office != "")
+                    {
+                        ws.Cells[currentOverviewSpot + 2, 1].Value =
+                            "Office: " + Convert.ToInt64(staff[k].office).ToString("###-###-####");
+                    }
+                    else
+                    {
+                        ws.Cells[currentOverviewSpot + 2, 1].Value =
+                            "Office: N/A";
+                    }
+                    for (int j = 0; j < 5; j++)
+                    {
+                        ws.Cells[2, j + 2].Value = weekdays[j];
+
+
+
+
                         int nRange = 0;
                         int fRange = 0;
 
@@ -151,59 +175,62 @@ namespace TempleScheduler
                                 max = flexAndNormalRangeCount;
                             }
 
-                            if(staff[k].normalRanges[j].Count() == 0 || staff[k].normalRanges[j].Count() == nRange)
+                            if (staff[k].normalRanges[j].Count() == 0 || staff[k].normalRanges[j].Count() == nRange)
                             {
                                 ws.Cells[currentOverviewSpot + i, j + 2].Value =
                                     time[staff[k].flexRanges[j].ElementAt(fRange).Item1] + "-" +
                                     time[staff[k].flexRanges[j].ElementAt(fRange).Item2];
                                 ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor.SetColor(color: System.Drawing.Color.PowderBlue);
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor
+                                    .SetColor(color: System.Drawing.Color.PowderBlue);
                                 fRange++;
-                            }else if (staff[k].flexRanges[j].Count() == 0 || staff[k].flexRanges[j].Count() == fRange)
+                            }
+                            else if (staff[k].flexRanges[j].Count() == 0 || staff[k].flexRanges[j].Count() == fRange)
                             {
                                 ws.Cells[currentOverviewSpot + i, j + 2].Value =
                                     time[staff[k].normalRanges[j].ElementAt(nRange).Item1] + "-" +
                                     time[staff[k].normalRanges[j].ElementAt(nRange).Item2];
                                 ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor.SetColor(color: System.Drawing.Color.LightGreen);
-                                nRange++;
-                            }else if (staff[k].normalRanges[j].ElementAt(nRange).Item1 < staff[k].flexRanges[j].ElementAt(fRange).Item1)
-                            {
-                                ws.Cells[currentOverviewSpot + i, j + 2].Value =
-                                    time[staff[k].normalRanges[j].ElementAt(nRange).Item1] + "-" +
-                                    time[staff[k].normalRanges[j].ElementAt(nRange).Item2];
-                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor.SetColor(color: System.Drawing.Color.LightGreen);
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor
+                                    .SetColor(color: System.Drawing.Color.LightGreen);
                                 nRange++;
                             }
-                            else if (staff[k].flexRanges[j].ElementAt(fRange).Item1 < staff[k].normalRanges[j].ElementAt(nRange).Item1)
+                            else if (staff[k].normalRanges[j].ElementAt(nRange).Item1 <
+                                     staff[k].flexRanges[j].ElementAt(fRange).Item1)
+                            {
+                                ws.Cells[currentOverviewSpot + i, j + 2].Value =
+                                    time[staff[k].normalRanges[j].ElementAt(nRange).Item1] + "-" +
+                                    time[staff[k].normalRanges[j].ElementAt(nRange).Item2];
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor
+                                    .SetColor(color: System.Drawing.Color.LightGreen);
+                                nRange++;
+                            }
+                            else if (staff[k].flexRanges[j].ElementAt(fRange).Item1 <
+                                     staff[k].normalRanges[j].ElementAt(nRange).Item1)
                             {
                                 ws.Cells[currentOverviewSpot + i, j + 2].Value =
                                     time[staff[k].flexRanges[j].ElementAt(fRange).Item1] + "-" +
                                     time[staff[k].flexRanges[j].ElementAt(fRange).Item2];
                                 ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor.SetColor(color: System.Drawing.Color.PowderBlue);
+                                ws.Cells[currentOverviewSpot + i, j + 2].Style.Fill.BackgroundColor
+                                    .SetColor(color: System.Drawing.Color.PowderBlue);
                                 fRange++;
                             }
-
-
-                           
                         }
 
 
 
-                        currentOverviewSpot += max + 1;
-                        
                     }
-                    
-                    if(globalOverviewSpotMax < currentOverviewSpot)
+                    currentOverviewSpot += max + 1;
+                    if (globalOverviewSpotMax < currentOverviewSpot)
                     {
                         globalOverviewSpotMax = currentOverviewSpot;
                     }
                 }
+
                 ws.Cells.AutoFitColumns();
                 StylingKey(ws: ws, currentCol: 6, shift: 1, globalOverviewSpotMax);
-
 
 
                 for (int j = 0; j < 5; j++)
