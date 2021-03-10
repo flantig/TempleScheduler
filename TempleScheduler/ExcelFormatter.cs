@@ -126,7 +126,15 @@ namespace TempleScheduler
             {
                 var ws = package.Workbook.Worksheets.Add(Name: "Overview");
                 ws.Cells[Address: "A1:F1"].Merge = true;
-                ws.Cells[Address: "A1"].Value = "Student Workers " + semester + "Schedule";
+                if (semester != "")
+                {
+                    ws.Cells[Address: "A1"].Value = "Student Workers " + semester + " Schedule";
+                }
+                else
+                {
+                    ws.Cells[Address: "A1"].Value = "Student Workers Schedule";
+                }
+
                 ws.Cells[Address: "A1"].Style.Font.Bold = true;
                 ws.Cells[Address: "A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 ws.Cells[Address: "A1"].Style.Font.Size = 26;
